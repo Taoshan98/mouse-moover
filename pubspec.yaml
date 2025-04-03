@@ -1,4 +1,5 @@
 name: mouse_moover
+title: "Mouse Moover"
 description: "Auto Mouse Mover"
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -15,6 +16,12 @@ dependencies:
   cupertino_icons: ^1.0.6
   auto_desktop: ^1.0.0
   hid_listener: ^2.0.1
+  process_run: ^0.13.1
+  system_tray: ^2.0.3
+  window_manager: ^0.3.7
+  tray_manager: ^0.4.0
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +31,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  assets:
+    - assets/
