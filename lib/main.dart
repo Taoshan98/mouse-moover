@@ -23,6 +23,7 @@ void main() async {
     maximumSize: Size(500, 850),
     center: true,
     backgroundColor: Colors.transparent,
+    title: "Mouse Moover",
     alwaysOnTop: true,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.normal,
@@ -487,14 +488,14 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
           ),
           actions: [
             // Platform indicator
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
               child: Chip(
                 backgroundColor: _surfaceColor.withOpacity(0.5),
                 label: Text(
                   'Platform: ${PlatformService.platformName}',
                   style: GoogleFonts.poppins(
-                    fontSize: 12,
+                    fontSize: 11,
                     color: Colors.white.withOpacity(0.8),
                   ),
                 ),
@@ -508,7 +509,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                   color: _accentColor,
                 ),
               ),
-            ),
+            ),*/
             // Settings button
             IconButton(
               icon: Icon(
@@ -668,7 +669,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                               
                               // Timer Settings
                               Text(
-                                'Tempo di inattività (secondi)',
+                                'Tempo di inattività',
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   color: Colors.white.withOpacity(0.8),
@@ -690,7 +691,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                                       ),
                                       keyboardType: TextInputType.number,
                                       style: GoogleFonts.poppins(
-                                        fontSize: 16,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ),
