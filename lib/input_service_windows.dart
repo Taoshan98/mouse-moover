@@ -97,8 +97,6 @@ class WindowsInputService implements InputServiceInterface {
     }
 
     _keyboardListeners.remove(id);
-    // Note: hid_listener doesn't support removing individual listeners,
-    // so we'll just stop calling the callback
     return true;
   }
 }

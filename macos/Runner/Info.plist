@@ -30,9 +30,13 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSAccessibilityEnabled</key>
+	<key>NSAppleEventsEnabled</key>
 	<true/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Needed to detect keyboard inputs</string>
+	<string>Required to detect keyboard events</string>	
+	<key>NSAccessibilityEnabled</key>
+	<true/>
+	<key>NSAccessibilityUsageDescription</key>
+	<string>Required to detect keyboard events</string>	
 </dict>
 </plist>

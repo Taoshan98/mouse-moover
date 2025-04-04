@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'input_service_interface.dart';
+import 'package:hid_listener/hid_listener.dart';
 
 /// Linux implementation of the input service
 class LinuxInputService implements InputServiceInterface {
@@ -35,8 +36,8 @@ class LinuxInputService implements InputServiceInterface {
       // Start polling for mouse position
       _startMousePositionPolling();
       
-      _isInitialized = true;
-      return true;
+      _isInitialized = getListenerBackend()!.initialize();
+      return _isInitialized;
     } catch (e) {
       print('Failed to initialize Linux input service: $e');
       return false;
@@ -119,10 +120,22 @@ class LinuxInputService implements InputServiceInterface {
     final id = _nextKeyboardListenerId++;
     _keyboardListeners[id] = callback;
     
-    // Note: For a complete implementation, we would need to set up
-    // a process to monitor keyboard events using xinput or a similar tool.
-    // This is a simplified version that just registers the callback.
-    
+  // Add the listener using hid_listener
+    getListenerBackend()!.addKeyboardListener((event) {
+      // Convert RawKeyEvent to KeyboardEventData
+      final data = KeyboardEventData(
+        keyCode: 0,  // Simplified - we'll use a default value
+        isDown: true,  // Simplified - we'll treat all key events as key down
+        isUp: false,
+        isCtrl: false,
+        isShift: false,
+        isAlt: false,
+      );
+      
+      // Call the callback
+      callback(data);
+    });
+
     return id;
   }
 

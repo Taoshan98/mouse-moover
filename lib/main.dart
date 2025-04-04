@@ -105,8 +105,7 @@ class _MouseMooverState extends State<MouseMoover>
     mouseListenerID = InputService.addMouseListener(_handleMouseEvent) ?? 0;
 
     // Add keyboard listener
-    keyboardListenerID =
-        InputService.addKeyboardListener(_handleKeyboardEvent) ?? 0;
+    keyboardListenerID = InputService.addKeyboardListener(_handleKeyboardEvent) ?? 0;
 
     _startUpdateTimer();
 
