@@ -13,10 +13,10 @@ import 'input_service_interface.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize window manager
   await windowManager.ensureInitialized();
-  
+
   WindowOptions windowOptions = const WindowOptions(
     size: Size(500, 850),
     minimumSize: Size(500, 850),
@@ -25,33 +25,33 @@ void main() async {
     backgroundColor: Colors.transparent,
     title: "Mouse Moover",
     alwaysOnTop: false,
-    skipTaskbar: true,
+    skipTaskbar: false,
     titleBarStyle: TitleBarStyle.normal,
   );
-  
+
   // Prevent the window from closing when the user clicks the close button
   await windowManager.setPreventClose(true);
-  
+
   await windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
     await windowManager.focus();
   });
-  
+
   // Initialize platform services
   if (!PlatformService.initialize()) {
     print("Failed to initialize platform service");
   }
-  
+
   // Initialize input service
   if (!InputService.initialize()) {
     print("Failed to initialize input service");
   }
-  
+
   // Initialize mouse service
   if (!MouseService.initialize()) {
     print("Failed to initialize mouse service");
   }
-  
+
   runApp(const MouseMoover());
 }
 
@@ -62,21 +62,22 @@ class MouseMoover extends StatefulWidget {
   State createState() => _MouseMooverState();
 }
 
-class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayListener {
+class _MouseMooverState extends State<MouseMoover>
+    with WindowListener, TrayListener {
   Timer? _timer;
   Timer? _inactivityTimer;
   Timer? _updateTimer;
   final Random _random = Random();
-  
+
   // Controls whether the mouse movement service is running
   bool _isRunning = false;
-  
+
   int _remainingSeconds = 15;
   DateTime? _inactivityStartTime;
   Duration _inactivityDuration = const Duration(seconds: 15);
   int mouseListenerID = 0;
   int keyboardListenerID = 0;
-  
+
   // UI state
   bool _showSettings = false;
 
@@ -92,28 +93,29 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
   @override
   void initState() {
     super.initState();
-    
+
     // Set up window manager
     windowManager.addListener(this);
-    
+
     // Set up tray manager
     trayManager.addListener(this);
     _initTray();
-    
+
     // Add mouse listener
     mouseListenerID = InputService.addMouseListener(_handleMouseEvent) ?? 0;
-    
+
     // Add keyboard listener
-    keyboardListenerID = InputService.addKeyboardListener(_handleKeyboardEvent) ?? 0;
-    
+    keyboardListenerID =
+        InputService.addKeyboardListener(_handleKeyboardEvent) ?? 0;
+
     _startUpdateTimer();
-    
+
     // Start the mouse movement service
     setState(() {
       _isRunning = true;
     });
   }
-  
+
   Future<void> _initTray() async {
     try {
       // Set up tray icon
@@ -127,17 +129,17 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
         // Use a system icon for Linux
         await trayManager.setIcon('./lib/assets/tray_icon_accent.ico');
       }
-      
+
       // Set up tray tooltip
       await trayManager.setToolTip('Mouse Moover');
-      
+
       // Set up tray menu
       await _updateTrayMenu();
     } catch (e) {
       print("Failed to initialize tray: $e");
     }
   }
-  
+
   Future<void> _updateTrayMenu() async {
     // Create tray menu items
     List<MenuItem> items = [
@@ -163,16 +165,16 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
         },
       ),
     ];
-    
+
     // Set tray menu
     await trayManager.setContextMenu(Menu(items: items));
   }
-  
+
   void _exitApp() async {
     await windowManager.destroy();
     exit(0);
   }
-  
+
   // Handle window close event
   @override
   void onWindowClose() async {
@@ -182,23 +184,23 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     await windowManager.setSkipTaskbar(true);
     // Prevent the window from closing
     await windowManager.setPreventClose(true);
-    
+
     setState(() {});
   }
-  
+
   // Handle window show event
   @override
   void onWindowFocus() async {
     // Show in taskbar when window is shown
     await windowManager.setSkipTaskbar(false);
   }
-  
+
   // Handle tray click event
   @override
   void onTrayIconMouseDown() {
     windowManager.show();
   }
-  
+
   // Handle tray right-click event
   @override
   void onTrayIconRightMouseDown() {
@@ -210,26 +212,25 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     _timer?.cancel();
     _inactivityTimer?.cancel();
     _updateTimer?.cancel();
-    
+
     // Remove listeners
     if (mouseListenerID > 0) {
       InputService.removeMouseListener(mouseListenerID);
     }
-    
+
     if (keyboardListenerID > 0) {
       InputService.removeKeyboardListener(keyboardListenerID);
     }
-    
+
     trayManager.removeListener(this);
     windowManager.removeListener(this);
-    
+
     _inputController.dispose();
     super.dispose();
   }
 
   void _handleMouseEvent(MouseEventData event) {
-
-  if (_isRunning) {
+    if (_isRunning) {
       // Only stop if automatic movement is running
       _stopAndReset();
     }
@@ -237,7 +238,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
   }
 
   void _handleKeyboardEvent(KeyboardEventData event) {
-  if (_isRunning) {
+    if (_isRunning) {
       // Only stop if automatic movement is running
       _stopAndReset();
     }
@@ -246,7 +247,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
 
   void _startMouseMovement() {
     if (_isRunning) {
-      _moveMouseToRandomPosition();       
+      _moveMouseToRandomPosition();
     }
   }
 
@@ -255,10 +256,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
       final size = MediaQuery.of(context).size;
       final randomX = _random.nextInt(size.width.toInt());
       final randomY = _random.nextInt(size.height.toInt());
-      
+
       // Use our platform-specific mouse service
       MouseService.moveMouse(randomX, randomY);
-      
+
       // Set up a timer to move the mouse again after a short delay
       _timer?.cancel();
       _timer = Timer(const Duration(seconds: 2), _startMouseMovement);
@@ -267,7 +268,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     }
   }
 
-  void _toggleMouseMovement()   {
+  void _toggleMouseMovement() {
     setState(() {
       _isRunning = !_isRunning;
 
@@ -278,22 +279,21 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
         _timer?.cancel();
       }
     });
-    
+
     // Update the tray menu to reflect the new state
-      _updateTrayMenu();
+    _updateTrayMenu();
   }
 
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityStartTime = DateTime.now();
     _inactivityTimer = Timer(_inactivityDuration, () {
-      
       // Automatically start the mouse movement after inactivity
       setState(() {
         _isRunning = true;
         _startMouseMovement();
       });
-      
+
       // Update the tray menu when the mouse movement is automatically started
       _updateTrayMenu();
     });
@@ -335,7 +335,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
       _inactivityTimer?.cancel();
       _startInactivityTimer(); // Restart the inactivity timer
     });
-    
+
     // Update the tray menu to reflect the new state
     //_updateTrayMenu();
   }
@@ -355,25 +355,25 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
       print("Input non valido: ${_inputController.text}");
     }
   }
-  
+
   /// Builds platform-specific setup instructions
   Widget _buildPlatformInstructions() {
     String instructions = '';
-    
+
     if (PlatformService.platformName == 'Windows') {
       instructions = 'Windows: No additional setup required.';
     } else if (PlatformService.platformName == 'Linux') {
       instructions = 'Linux: Please install xdotool using:\n'
-                    'sudo apt-get install xdotool\n'
-                    'This is required for mouse movement and tracking.';
+          'sudo apt-get install xdotool\n'
+          'This is required for mouse movement and tracking.';
     } else if (PlatformService.platformName == 'macOS') {
       instructions = 'macOS: Please install cliclick using:\n'
-                    'brew install cliclick\n'
-                    'This is required for mouse movement and tracking.';
+          'brew install cliclick\n'
+          'This is required for mouse movement and tracking.';
     } else {
       instructions = 'Your platform is not supported.';
     }
-    
+
     return Container(
       width: 400,
       padding: const EdgeInsets.all(16),
@@ -420,12 +420,13 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
         ],
       ),
     )
-    .animate(
-      autoPlay: true,
-      onPlay: (controller) {}, // Empty callback to prevent warning
-    )
-    .fadeIn(duration: 500.ms, delay: 300.ms)
-    .slideY(begin: 0.2, end: 0, duration: 500.ms, curve: Curves.easeOutQuad);
+        .animate(
+          autoPlay: true,
+          onPlay: (controller) {}, // Empty callback to prevent warning
+        )
+        .fadeIn(duration: 500.ms, delay: 300.ms)
+        .slideY(
+            begin: 0.2, end: 0, duration: 500.ms, curve: Curves.easeOutQuad);
   }
 
   @override
@@ -529,7 +530,8 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
               end: Alignment.bottomRight,
               colors: [
                 _backgroundColor,
-                _backgroundColor.withBlue((_backgroundColor.blue + 15).clamp(0, 255)),
+                _backgroundColor
+                    .withBlue((_backgroundColor.blue + 15).clamp(0, 255)),
               ],
             ),
           ),
@@ -551,18 +553,20 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                             Icon(
                               _isRunning ? Icons.mouse : Icons.mouse_outlined,
                               size: 64,
-                              color: _isRunning ? _accentColor : Colors.white.withOpacity(0.7),
+                              color: _isRunning
+                                  ? _accentColor
+                                  : Colors.white.withOpacity(0.7),
                             )
-                            .animate(
-                              onPlay: (controller) => controller.repeat(),
-                              autoPlay: _isRunning,
-                            )
-                            .shimmer(
-                              duration: 2.seconds,
-                              color: _accentColor.withOpacity(0.5),
-                            ),
+                                .animate(
+                                  onPlay: (controller) => controller.repeat(),
+                                  autoPlay: _isRunning,
+                                )
+                                .shimmer(
+                                  duration: 2.seconds,
+                                  color: _accentColor.withOpacity(0.5),
+                                ),
                             const SizedBox(height: 16),
-                            
+
                             // Status Text
                             Text(
                               _isRunning
@@ -575,18 +579,20 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                               ),
                               textAlign: TextAlign.center,
                             )
-                            .animate(
-                              autoPlay: true,
-                              onPlay: (controller) {}, // Empty callback to prevent warning
-                            )
-                            .fadeIn(duration: 500.ms)
-                            .slideY(begin: 0.2, end: 0, duration: 500.ms),
-                            
+                                .animate(
+                                  autoPlay: true,
+                                  onPlay:
+                                      (controller) {}, // Empty callback to prevent warning
+                                )
+                                .fadeIn(duration: 500.ms)
+                                .slideY(begin: 0.2, end: 0, duration: 500.ms),
+
                             const SizedBox(height: 8),
-                            
+
                             // Inactivity Status
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               decoration: BoxDecoration(
                                 color: _surfaceColor.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(30),
@@ -610,19 +616,20 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                                 ],
                               ),
                             )
-                            .animate(
-                              autoPlay: true,
-                              onPlay: (controller) {}, // Empty callback to prevent warning
-                            )
-                            .fadeIn(duration: 500.ms, delay: 200.ms)
-                            .slideY(begin: 0.2, end: 0, duration: 500.ms),
+                                .animate(
+                                  autoPlay: true,
+                                  onPlay:
+                                      (controller) {}, // Empty callback to prevent warning
+                                )
+                                .fadeIn(duration: 500.ms, delay: 200.ms)
+                                .slideY(begin: 0.2, end: 0, duration: 500.ms),
                           ],
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Control Button
                     ElevatedButton.icon(
                       onPressed: _toggleMouseMovement,
@@ -630,21 +637,24 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                         _isRunning ? Icons.pause : Icons.play_arrow,
                         size: 24,
                       ),
-                      label: Text(_isRunning ? 'Ferma Movimento' : 'Avvia Movimento'),
+                      label: Text(
+                          _isRunning ? 'Ferma Movimento' : 'Avvia Movimento'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _isRunning ? _errorColor : _primaryColor,
+                        backgroundColor:
+                            _isRunning ? _errorColor : _primaryColor,
                         minimumSize: const Size(250, 50),
                       ),
                     )
-                    .animate(
-                      autoPlay: true,
-                      onPlay: (controller) {}, // Empty callback to prevent warning
-                    )
-                    .fadeIn(duration: 500.ms, delay: 400.ms)
-                    .slideY(begin: 0.2, end: 0, duration: 500.ms),
-                    
+                        .animate(
+                          autoPlay: true,
+                          onPlay:
+                              (controller) {}, // Empty callback to prevent warning
+                        )
+                        .fadeIn(duration: 500.ms, delay: 400.ms)
+                        .slideY(begin: 0.2, end: 0, duration: 500.ms),
+
                     const SizedBox(height: 32),
-                    
+
                     // Settings Panel (conditionally shown)
                     if (_showSettings)
                       Card(
@@ -673,7 +683,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                                 ],
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // Timer Settings
                               Text(
                                 'Tempo di inattività',
@@ -716,15 +726,16 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                           ),
                         ),
                       )
-                      .animate(
-                        autoPlay: true,
-                        onPlay: (controller) {}, // Empty callback to prevent warning
-                      )
-                      .fadeIn(duration: 300.ms)
-                      .slideY(begin: 0.1, end: 0, duration: 300.ms),
-                    
+                          .animate(
+                            autoPlay: true,
+                            onPlay:
+                                (controller) {}, // Empty callback to prevent warning
+                          )
+                          .fadeIn(duration: 300.ms)
+                          .slideY(begin: 0.1, end: 0, duration: 300.ms),
+
                     const SizedBox(height: 32),
-                    
+
                     // Platform Instructions
                     _buildPlatformInstructions(),
                   ],

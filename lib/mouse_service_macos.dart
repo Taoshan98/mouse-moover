@@ -29,7 +29,7 @@ class MacOSMouseService implements MouseServiceInterface {
 
     try {
       // Use cliclick to move the mouse
-      Process.runSync('cliclick', ['-e 60','m:$x,$y']);
+      Process.runSync('cliclick', ['-e 200','m:$x,$y']);
     } catch (e) {
       print('Failed to move mouse on macOS: $e');
     }
