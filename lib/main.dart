@@ -24,8 +24,8 @@ void main() async {
     center: true,
     backgroundColor: Colors.transparent,
     title: "Mouse Moover",
-    alwaysOnTop: true,
-    skipTaskbar: false,
+    alwaysOnTop: false,
+    skipTaskbar: true,
     titleBarStyle: TitleBarStyle.normal,
   );
   
@@ -67,7 +67,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
   Timer? _inactivityTimer;
   Timer? _updateTimer;
   final Random _random = Random();
+  
+  // Controls whether the mouse movement service is running
   bool _isRunning = false;
+  
   int _remainingSeconds = 15;
   DateTime? _inactivityStartTime;
   Duration _inactivityDuration = const Duration(seconds: 15);
@@ -104,6 +107,11 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     keyboardListenerID = InputService.addKeyboardListener(_handleKeyboardEvent) ?? 0;
     
     _startUpdateTimer();
+    
+    // Start the mouse movement service
+    setState(() {
+      _isRunning = true;
+    });
   }
   
   Future<void> _initTray() async {
@@ -220,6 +228,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
   }
 
   void _handleMouseEvent(MouseEventData event) {
+
     if (_isRunning) {
       // Only stop if automatic movement is running
       _stopAndReset();
@@ -258,27 +267,41 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     }
   }
 
-  void _toggleMouseMovement() {
+  void _toggleMouseMovement() async {
     setState(() {
       _isRunning = !_isRunning;
+
       if (_isRunning) {
         _startMouseMovement();
       } else {
+        _inactivityTimer?.cancel();
         _timer?.cancel();
       }
     });
     
     // Update the tray menu to reflect the new state
-    _updateTrayMenu();
+    await _updateTrayMenu();
   }
 
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityStartTime = DateTime.now();
     _inactivityTimer = Timer(_inactivityDuration, () {
+      
+      // Automatically start the mouse movement after inactivity
       setState(() {
         _isRunning = true;
         _startMouseMovement();
+      });
+      
+      // Update the tray menu when the mouse movement is automatically started
+      _updateTrayMenu();
+      
+      // Force a rebuild to ensure UI is updated
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
+        }
       });
     });
   }
@@ -287,6 +310,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     if (!_isRunning) {
       // Don't reset if automatic movement is active
       _inactivityTimer?.cancel();
+    } else {
       _startInactivityTimer();
     }
   }
@@ -310,7 +334,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
 
   void _stopAndReset() {
     setState(() {
-      _isRunning = false;
+      //_isRunning = false;
       _timer?.cancel();
       _remainingSeconds = _inactivityDuration.inSeconds;
       _inactivityStartTime = null; // Reset the inactivity start time
@@ -402,7 +426,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
         ],
       ),
     )
-    .animate()
+    .animate(
+      autoPlay: true,
+      onPlay: (controller) {}, // Empty callback to prevent warning
+    )
     .fadeIn(duration: 500.ms, delay: 300.ms)
     .slideY(begin: 0.2, end: 0, duration: 500.ms, curve: Curves.easeOutQuad);
   }
@@ -487,29 +514,6 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
             ],
           ),
           actions: [
-            // Platform indicator
-            /*Padding(
-              padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-              child: Chip(
-                backgroundColor: _surfaceColor.withOpacity(0.5),
-                label: Text(
-                  'Platform: ${PlatformService.platformName}',
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.white.withOpacity(0.8),
-                  ),
-                ),
-                avatar: Icon(
-                  Platform.isWindows
-                      ? Icons.window
-                      : Platform.isMacOS
-                          ? Icons.laptop_mac
-                          : Icons.laptop,
-                  size: 16,
-                  color: _accentColor,
-                ),
-              ),
-            ),*/
             // Settings button
             IconButton(
               icon: Icon(
@@ -577,7 +581,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                               ),
                               textAlign: TextAlign.center,
                             )
-                            .animate()
+                            .animate(
+                              autoPlay: true,
+                              onPlay: (controller) {}, // Empty callback to prevent warning
+                            )
                             .fadeIn(duration: 500.ms)
                             .slideY(begin: 0.2, end: 0, duration: 500.ms),
                             
@@ -609,7 +616,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                                 ],
                               ),
                             )
-                            .animate()
+                            .animate(
+                              autoPlay: true,
+                              onPlay: (controller) {}, // Empty callback to prevent warning
+                            )
                             .fadeIn(duration: 500.ms, delay: 200.ms)
                             .slideY(begin: 0.2, end: 0, duration: 500.ms),
                           ],
@@ -632,7 +642,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                         minimumSize: const Size(250, 50),
                       ),
                     )
-                    .animate()
+                    .animate(
+                      autoPlay: true,
+                      onPlay: (controller) {}, // Empty callback to prevent warning
+                    )
                     .fadeIn(duration: 500.ms, delay: 400.ms)
                     .slideY(begin: 0.2, end: 0, duration: 500.ms),
                     
@@ -709,7 +722,10 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                           ),
                         ),
                       )
-                      .animate()
+                      .animate(
+                        autoPlay: true,
+                        onPlay: (controller) {}, // Empty callback to prevent warning
+                      )
                       .fadeIn(duration: 300.ms)
                       .slideY(begin: 0.1, end: 0, duration: 300.ms),
                     
