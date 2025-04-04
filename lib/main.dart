@@ -119,13 +119,13 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
       // Set up tray icon
       if (Platform.isWindows) {
         // Use a system icon for Windows
-        await trayManager.setIcon('./assets/tray_icon.ico');
+        await trayManager.setIcon('./lib/assets/tray_icon_accent.ico');
       } else if (Platform.isMacOS) {
         // Use a system icon for macOS
-        await trayManager.setIcon('./assets/tray_icon.ico');
+        await trayManager.setIcon('./lib/assets/tray_icon_white.ico');
       } else {
         // Use a system icon for Linux
-        await trayManager.setIcon('./assets/tray_icon.ico');
+        await trayManager.setIcon('./lib/assets/tray_icon_accent.ico');
       }
       
       // Set up tray tooltip
@@ -229,7 +229,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
 
   void _handleMouseEvent(MouseEventData event) {
 
-    if (_isRunning) {
+  if (_isRunning) {
       // Only stop if automatic movement is running
       _stopAndReset();
     }
@@ -237,7 +237,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
   }
 
   void _handleKeyboardEvent(KeyboardEventData event) {
-    if (_isRunning) {
+  if (_isRunning) {
       // Only stop if automatic movement is running
       _stopAndReset();
     }
@@ -246,7 +246,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
 
   void _startMouseMovement() {
     if (_isRunning) {
-      _moveMouseToRandomPosition();
+      _moveMouseToRandomPosition();       
     }
   }
 
@@ -267,7 +267,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     }
   }
 
-  void _toggleMouseMovement() async {
+  void _toggleMouseMovement()   {
     setState(() {
       _isRunning = !_isRunning;
 
@@ -280,7 +280,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     });
     
     // Update the tray menu to reflect the new state
-    await _updateTrayMenu();
+      _updateTrayMenu();
   }
 
   void _startInactivityTimer() {
@@ -296,13 +296,6 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
       
       // Update the tray menu when the mouse movement is automatically started
       _updateTrayMenu();
-      
-      // Force a rebuild to ensure UI is updated
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {});
-        }
-      });
     });
   }
 
@@ -310,6 +303,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     if (!_isRunning) {
       // Don't reset if automatic movement is active
       _inactivityTimer?.cancel();
+      _timer?.cancel();
     } else {
       _startInactivityTimer();
     }
@@ -343,7 +337,7 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
     });
     
     // Update the tray menu to reflect the new state
-    _updateTrayMenu();
+    //_updateTrayMenu();
   }
 
   void _updateTimerSettings() {
@@ -572,8 +566,8 @@ class _MouseMooverState extends State<MouseMoover> with WindowListener, TrayList
                             // Status Text
                             Text(
                               _isRunning
-                                  ? 'Movimento del mouse attivo'
-                                  : 'Movimento del mouse disattivato',
+                                  ? 'Movimento attivo'
+                                  : 'Movimento disattivo',
                               style: GoogleFonts.poppins(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600,
