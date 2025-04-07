@@ -443,7 +443,6 @@ class _MouseMooverState extends State<MouseMoover>
           primary: _primaryColor,
           secondary: _accentColor,
           surface: _surfaceColor,
-          background: _backgroundColor,
           error: _errorColor,
         ),
         scaffoldBackgroundColor: _backgroundColor,
@@ -714,10 +713,10 @@ class _MouseMooverState extends State<MouseMoover>
                                   const SizedBox(width: 16),
                                   ElevatedButton(
                                     onPressed: _updateTimerSettings,
-                                    child: const Text('Applica'),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _accentColor,
                                     ),
+                                    child: const Text('Applica'),
                                   ),
                                 ],
                               ),
