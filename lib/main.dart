@@ -146,7 +146,6 @@ class _MouseMooverState extends State<MouseMoover>
         label: 'Show Window',
         onClick: (_) async {
           await windowManager.show();
-          await windowManager.focus();
         },
       ),
       MenuItem.separator(),
