@@ -143,7 +143,7 @@ class _MouseMooverState extends State<MouseMoover>
     // Create tray menu items
     List<MenuItem> items = [
       MenuItem(
-        label: 'Mostra Finestra',
+        label: 'Show Window',
         onClick: (_) async {
           await windowManager.show();
           await windowManager.focus();
@@ -158,7 +158,7 @@ class _MouseMooverState extends State<MouseMoover>
       ),
       MenuItem.separator(),
       MenuItem(
-        label: 'Esci',
+        label: 'Quit',
         onClick: (_) {
           _exitApp();
         },
