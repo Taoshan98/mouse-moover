@@ -151,7 +151,7 @@ class _MouseMooverState extends State<MouseMoover>
       ),
       MenuItem.separator(),
       MenuItem(
-        label: _isRunning ? 'Ferma Movimento Mouse' : 'Avvia Movimento Mouse',
+        label: _isRunning ? 'Stop Mouse Movement' : 'Start Mouse Movement',
         onClick: (_) {
           _toggleMouseMovement();
         },
@@ -263,7 +263,7 @@ class _MouseMooverState extends State<MouseMoover>
       _timer?.cancel();
       _timer = Timer(const Duration(seconds: 2), _startMouseMovement);
     } catch (e) {
-      print("Errore nel movimento del mouse: $e");
+      print("Error moving mouse: $e");
     }
   }
 
@@ -327,7 +327,6 @@ class _MouseMooverState extends State<MouseMoover>
 
   void _stopAndReset() {
     setState(() {
-      //_isRunning = false;
       _timer?.cancel();
       _remainingSeconds = _inactivityDuration.inSeconds;
       _inactivityStartTime = null; // Reset the inactivity start time
@@ -351,7 +350,7 @@ class _MouseMooverState extends State<MouseMoover>
       });
     } catch (e) {
       // Handle parsing error
-      print("Input non valido: ${_inputController.text}");
+      print("Invalid Input: ${_inputController.text}");
     }
   }
 
@@ -432,8 +431,8 @@ class _MouseMooverState extends State<MouseMoover>
   Widget build(BuildContext context) {
     String inactivityStatusText =
         _inactivityTimer != null && _inactivityTimer!.isActive
-            ? 'Attivazione automatica tra $_remainingSeconds secondi'
-            : 'Attivazione automatica disattivata/scaduta';
+            ? 'Mouse movement in $_remainingSeconds seconds'
+            : 'Mouse movement disabled';
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -568,8 +567,8 @@ class _MouseMooverState extends State<MouseMoover>
                             // Status Text
                             Text(
                               _isRunning
-                                  ? 'Movimento attivo'
-                                  : 'Movimento disattivo',
+                                  ? 'Mouse movement acitive'
+                                  : 'Mouse movement disabled',
                               style: GoogleFonts.poppins(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600,
@@ -636,7 +635,7 @@ class _MouseMooverState extends State<MouseMoover>
                         size: 24,
                       ),
                       label: Text(
-                          _isRunning ? 'Ferma Movimento' : 'Avvia Movimento'),
+                          _isRunning ? 'Stop Movement' : 'Start Movement'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             _isRunning ? _errorColor : _primaryColor,
@@ -671,7 +670,7 @@ class _MouseMooverState extends State<MouseMoover>
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Impostazioni',
+                                    'Settings',
                                     style: GoogleFonts.poppins(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -684,7 +683,7 @@ class _MouseMooverState extends State<MouseMoover>
 
                               // Timer Settings
                               Text(
-                                'Tempo di inattività',
+                                'Seconds movement delay',
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   color: Colors.white.withOpacity(0.8),
@@ -697,8 +696,8 @@ class _MouseMooverState extends State<MouseMoover>
                                     child: TextField(
                                       controller: _inputController,
                                       decoration: InputDecoration(
-                                        labelText: 'Imposta secondi',
-                                        hintText: 'Inserisci un numero intero',
+                                        labelText: 'Set seconds',
+                                        hintText: 'Enter an integer number',
                                         prefixIcon: Icon(
                                           Icons.timer,
                                           color: _accentColor.withOpacity(0.7),
@@ -716,7 +715,7 @@ class _MouseMooverState extends State<MouseMoover>
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _accentColor,
                                     ),
-                                    child: const Text('Applica'),
+                                    child: const Text('Save'),
                                   ),
                                 ],
                               ),
