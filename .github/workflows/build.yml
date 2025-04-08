@@ -1,0 +1,80 @@
+name: Build and Release Flutter Desktop App
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build for ${{ matrix.platform }}
+        run: flutter build ${{ matrix.platform }} --release
+
+      - name: Compile .ISS to .EXE Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: setup_configs/setup.iss
+          options: /O+
+
+      - name: Archive build (Windows)
+        if: matrix.platform == 'windows'
+        run: |
+          Compress-Archive -Path build/windows/runner/Release/Output/* -DestinationPath mouse-moover-windows.zip
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}
+          path: mouse-moover-${{ matrix.platform }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+     # Scarica gli artifact da ciascun job
+      - name: Download Windows Build
+        uses: actions/download-artifact@v3
+        with:
+          name: windows
+          path: ./build_artifacts/windows
+
+      # Crea la release usando il tag corrente
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      # Carica gli asset nella release
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build_artifacts/windows/mouse-moover-windows.zip
+          asset_name: mouse-moover-windows.zip
+          asset_content_type: application/zip
