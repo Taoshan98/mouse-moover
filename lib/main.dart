@@ -567,7 +567,7 @@ class _MouseMooverState extends State<MouseMoover>
                             // Status Text
                             Text(
                               _isRunning
-                                  ? 'Mouse movement acitive'
+                                  ? 'Mouse movement active'
                                   : 'Mouse movement disabled',
                               style: GoogleFonts.poppins(
                                 fontSize: 24,
