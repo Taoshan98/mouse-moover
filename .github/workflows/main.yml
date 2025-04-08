@@ -10,4 +10,4 @@ jobs:
       - name: Compile .ISS to .EXE Installer
         uses: robin24/inno-setup-action@v1
         with:
-          filepath: ./setup_configs/windows.iss
+          filepath: ./windows.iss
