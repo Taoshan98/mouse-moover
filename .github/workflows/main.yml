@@ -4,8 +4,11 @@ jobs:
   build:
     name: Build the Inno Setup Installer
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: D:\mouse-moover\mouse-moover
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Compile .ISS to .EXE Installer
         uses: robin24/inno-setup-action@v1
         with:
