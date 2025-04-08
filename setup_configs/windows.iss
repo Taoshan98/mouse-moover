@@ -31,9 +31,9 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
-OutputDir=D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release
+OutputDir=D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release
 OutputBaseFilename=Mouse_Moover_Setup.exe
-SetupIconFile=D:\mouse-moover\mouse-moover\lib\assets\tray_icon_accent.ico
+SetupIconFile=D:\a\mouse-moover\mouse-moover\lib\assets\tray_icon_accent.ico
 SolidCompression=yes
 WizardStyle=modern
 
@@ -44,14 +44,14 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\hid_listener.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\screen_retriever_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\system_tray_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\tray_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\mouse-moover\mouse-moover\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\hid_listener.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\screen_retriever_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\system_tray_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\tray_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\window_manager_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
