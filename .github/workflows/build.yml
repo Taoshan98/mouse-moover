@@ -3,7 +3,7 @@ name: Build and Release Flutter Desktop App
 on:
   push:
     branches:
-      - main
+      - master
       
 jobs:
   build:
