@@ -26,6 +26,10 @@ Mouse Moover is a Flutter desktop application that simulates user activity by au
 - **Cross-Platform Support:**  
   Supports Windows, macOS, and Linux by using platform-specific implementations for controlling the mouse cursor.
 
+## Screenshots
+
+ ![Screen1](https://github.com/user-attachments/assets/96501bc9-8caa-4f00-bf49-f34eb4aaa13e)
+
 ## Build Prerequisites
 
 If you want to build yourself, before running the application, make sure you have the following:
