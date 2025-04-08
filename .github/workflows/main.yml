@@ -6,7 +6,7 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        working-directory: D:\mouse-moover\mouse-moover
+        working-directory: ./src
     steps:
       - uses: actions/checkout@v4
       - name: Compile .ISS to .EXE Installer
