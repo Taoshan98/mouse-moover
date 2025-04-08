@@ -5,8 +5,7 @@ jobs:
     name: Build the Inno Setup Installer
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v3
       - name: Compile .ISS to .EXE Installer
         uses: robin24/inno-setup-action@v1
         with:
