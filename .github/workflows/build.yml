@@ -37,7 +37,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}
+          name: ${{ matrix.platform }}-installer
           path: D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\Mouse_Moover_Setup.exe
 
   release:
@@ -48,5 +48,5 @@ jobs:
       - name: Download Windows Build
         uses: actions/download-artifact@v4
         with:
-          name: Mouse-Moover-Windows
+          name: windows-installer
           path: ./build_artifacts/windows
