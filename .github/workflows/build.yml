@@ -34,16 +34,11 @@ jobs:
           path: setup_configs/windows.iss
           options: /O+
 
-      - name: Archive build (Windows)
-        if: matrix.platform == 'windows'
-        run: |
-          Compress-Archive -Path D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\* -DestinationPath mouse-moover-windows.zip
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}
-          path: mouse-moover-${{ matrix.platform }}.zip
+          path: D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\Mouse_Moover_Setup.exe
 
   release:
     needs: build
@@ -53,26 +48,5 @@ jobs:
       - name: Download Windows Build
         uses: actions/download-artifact@v4
         with:
-          name: windows
+          name: Mouse-Moover-Windows
           path: ./build_artifacts/windows
-
-      # Crea la release usando il tag corrente
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # Se preferisci utilizzare un tag specifico, assicurati che venga creato
-          tag_name: ${{ github.sha }}
-          name: "Release ${{ github.sha }}"
-          draft: false
-          prerelease: false
-
-      # Carica l'asset nella release
-      - name: Upload Windows Release Asset
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: upload ./build_artifacts/windows/mouse-moover-windows.zip
