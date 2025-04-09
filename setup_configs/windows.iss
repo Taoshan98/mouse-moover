@@ -32,7 +32,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 OutputDir=D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release
-OutputBaseFilename=Mouse_Moover_Setup.exe
+OutputBaseFilename=Mouse_Moover_Setup
 SetupIconFile=D:\a\mouse-moover\mouse-moover\lib\assets\tray_icon_accent.ico
 SolidCompression=yes
 WizardStyle=modern
