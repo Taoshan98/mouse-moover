@@ -66,4 +66,4 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
-          artifacts: "windows-installer.zip,./build_artifacts/windows/windows-installer.zip"
+          artifacts: "windows-installer,windows-installer.zip,./build_artifacts/windows/windows-installer.zip"
