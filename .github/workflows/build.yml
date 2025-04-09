@@ -37,7 +37,7 @@ jobs:
       - name: Archive build (Windows)
         if: matrix.platform == 'windows'
         run: |
-          Compress-Archive -Path D:\a\mouse-moover\mouse-moover\build/windows/runner/Release/Output/* -DestinationPath mouse-moover-windows.zip
+          Compress-Archive -Path D:\a\mouse-moover\mouse-moover\build\windows\runner\Release\Output\* -DestinationPath mouse-moover-windows.zip
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
