@@ -69,4 +69,4 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
-          artifacts: "/home/runner/work/mouse-moover/mouse-moover/build_artifacts/windows/windows-installer,/home/runner/work/mouse-moover/mouse-moover/build_artifacts/windows/*,build_artifacts/windows/*"
+          artifacts: "build_artifacts/windows/*"
