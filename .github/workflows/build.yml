@@ -13,12 +13,14 @@ jobs:
         include:
           - os: windows-latest
             platform: windows
+          - os: macos-latest
+            platform: macos
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.19.0
         with:
           channel: stable
 
@@ -29,16 +31,25 @@ jobs:
         run: flutter build ${{ matrix.platform }} --release
 
       - name: Compile .ISS to .EXE Installer
+        if: matrix.platform == 'windows'
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
         with:
           path: setup_configs/windows.iss
           options: /O+
 
-      - name: Upload Artifact
+      - name: Upload Artifact (Windows EXE)
+        if: matrix.platform == 'windows'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-installer
           path: D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\Mouse_Moover_Setup.exe
+
+      - name: Upload Artifact (macOS APP)
+        if: matrix.platform == 'macos'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-app
+          path: build/macos/Build/Products/Release/*.app
 
   release:
     needs: build
@@ -56,6 +67,12 @@ jobs:
           name: windows-installer
           path: ./build_artifacts/windows
 
+      - name: Download macOS Build
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-app
+          path: ./build_artifacts/macos
+
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
@@ -69,4 +86,4 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
-          artifacts: "build_artifacts/windows/*"
+          artifacts: "build_artifacts/windows/*,build_artifacts/macos/*"
