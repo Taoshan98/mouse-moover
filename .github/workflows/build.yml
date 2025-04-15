@@ -30,33 +30,33 @@ jobs:
       - name: Build for ${{ matrix.platform }}
         run: flutter build ${{ matrix.platform }} --release
 
-      - name: Compile .ISS to .EXE Installer
+      - name: Build Windows Installer
         if: matrix.platform == 'windows'
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
         with:
           path: setup_configs/windows.iss
           options: /O+
 
-      - name: Upload Artifact (Windows EXE)
+      - name: Upload Windows Installer
         if: matrix.platform == 'windows'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-installer
           path: D:\a\mouse-moover\mouse-moover\build\windows\x64\runner\Release\Mouse_Moover_Setup.exe
 
-      - name: Upload Artifact (macOS APP)
-        if: matrix.platform == 'macos'
-        uses: actions/upload-artifact@v4
-        with:
-          name: mouse_moover
-          path: build/macos/Build/Products/Release/*.app
-
-      - name: Upload Artifact (macOS APP)
+      - name: Build MacOS Installer
         if: matrix.platform == 'macos'
         uses: L-Super/create-dmg-actions@v1.0.3
         with:
           dmg_name: ${{ matrix.platform }}-installer
           src_dir: build/macos/Build/Products/Release/mouse_moover.app
+
+      - name: Upload MacOS Installer
+        if: matrix.platform == 'macos'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-installer
+          path: /Users/runner/work/mouse-moover/mouse-moover/macos-installer.dmg
 
   release:
     needs: build
